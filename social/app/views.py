@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
+from .models import Post, Tag
 from .forms import PostCreateForm,PostEditForm
 from bs4 import BeautifulSoup
 import requests
@@ -7,9 +7,16 @@ from django.contrib import messages
 
 
 # Create your views here.
-def home_page(request):
-    posts = Post.objects.all()
-    context = {'posts':posts}
+def home_page(request,tag=None):
+    if tag:
+        posts = Post.objects.filter(tags__slug=tag)
+        tag = get_object_or_404(Tag, slug=tag)
+    else:
+        posts = Post.objects.all()
+        
+    categories = Tag.objects.all()
+        
+    context = {'posts':posts, 'categories':categories,'tag':tag}
     return render(request,'app/home.html',context)
 
 def create_post(request):
@@ -36,6 +43,7 @@ def create_post(request):
             post.title = title
             
             post.save()
+            form.save_m2m()
             return redirect('home')
         
     context = {'form':form}
@@ -68,6 +76,8 @@ def read_post(request, pk):
     post = get_object_or_404(Post, id=pk)
     context = {'post':post}
     return render(request, 'app/post_read.html', context)
+
+
 
 
 
