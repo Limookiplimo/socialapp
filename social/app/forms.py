@@ -5,25 +5,29 @@ from django import forms
 class PostCreateForm(ModelForm):
     class Meta:
         model = Post
-        fields = ['url','body']
+        fields = ['url','body','tags']
         labels = {
-            'body': 'Caption'
+            'body': 'Caption',
+            'tags': 'Category'
         }
         widgets = {
             'body': forms.Textarea(attrs={'rows':3,'placeholder':'Caption your post...','class': 'font1 text-4xl'}),
-            'url': forms.TextInput(attrs={'placeholder':'Paste url...'})
+            'url': forms.TextInput(attrs={'placeholder':'Paste url...'}),
+            'tags': forms.CheckboxSelectMultiple(),
         }
 
 
 class PostEditForm(ModelForm):
     class Meta:
         model = Post
-        fields = ['body']
+        fields = ['body','tags']
         labels = {
-            'body': ''
+            'body': '',
+            'tags': 'Category'
         }
         widgets = {
             'body': forms.Textarea(attrs={'rows':3,'class': 'font1 text-4xl'}),
+            'tags': forms.CheckboxSelectMultiple(),
         }
 
 
